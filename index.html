@@ -112,17 +112,70 @@
       AAPL: "Action — Apple"
     };
 
-    function analyse() {
-      const market = document.getElementById("market").value;
-      document.getElementById("marketTitle").textContent = assets[market];
-      document.getElementById("price").textContent =
-        "Données en attente de connexion";
-      document.getElementById("status").textContent =
-        "Mode démonstration : aucun prix réel n'est affiché.";
-      document.getElementById("technical").textContent =
-        "Pour analyser " + assets[market] +
-        ", nous devrons connecter des données de marché et calculer les indicateurs techniques.";
+   async function analyse() {
+  const market = document.getElementById("market").value;
+
+  document.getElementById("marketTitle").textContent =
+    assets[market];
+
+  const priceElement = document.getElementById("price");
+  const statusElement = document.getElementById("status");
+  const technicalElement = document.getElementById("technical");
+
+  if (market !== "XAUUSD") {
+    priceElement.textContent = "Données non connectées";
+    statusElement.textContent =
+      "Pour le moment, seule la source XAU/USD sera intégrée.";
+    technicalElement.textContent =
+      "Choisis Or — XAU/USD pour continuer.";
+    return;
+  }
+
+  priceElement.textContent = "Chargement du prix…";
+  statusElement.textContent = "Connexion à la source de données…";
+  technicalElement.textContent = "";
+
+  try {
+    const response = await fetch(
+      "https://xaus.com/api/v1/spot?compact=1",
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("Erreur HTTP " + response.status);
     }
+
+    const data = await response.json();
+    const price = data.spot_usd_oz;
+
+    if (typeof price !== "number" || !Number.isFinite(price)) {
+      throw new Error("Format du prix inattendu");
+    }
+
+    priceElement.textContent =
+      new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "USD"
+      }).format(price);
+
+    const state = data.data_state?.status ?? "unknown";
+
+    statusElement.textContent =
+      state === "fresh"
+        ? "Prix reçu — données fraîches"
+        : "Prix reçu — état des données : " + state;
+
+    technicalElement.textContent =
+      "Prix indicatif de l’or en USD par once troy. " +
+      "Vérifie l’horodatage et l’état des données avant utilisation.";
+
+  } catch (error) {
+    priceElement.textContent = "Prix indisponible";
+    statusElement.textContent = error.message;
+    technicalElement.textContent =
+      "Impossible de confirmer le prix. Réessaie plus tard.";
+  }
+}
 
     analyse();
   </script>
