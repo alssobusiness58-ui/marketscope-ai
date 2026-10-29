@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarketScope AI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: #f3f6fc;
+    }
+    header {
+      background: #182438;
+      padding: 22px;
+      border-bottom: 2px solid #eab308;
+    }
+    header h1 { margin: 0; color: #facc15; }
+    header p { color: #cbd5e1; }
+    main { max-width: 1000px; margin: auto; padding: 20px; }
+    .card {
+      background: #1e293b;
+      padding: 18px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+    }
+    select, button {
+      padding: 12px;
+      border-radius: 7px;
+      border: 0;
+      margin: 5px 0;
+      font-size: 16px;
+    }
+    select { background: #f8fafc; width: 100%; }
+    button {
+      background: #eab308;
+      color: #111827;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .price { font-size: 28px; color: #facc15; font-weight: bold; }
+    .muted { color: #cbd5e1; line-height: 1.6; }
+    footer { text-align: center; padding: 20px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MarketScope AI</h1>
+    <p>Analyse technique et fondamentale des marchés financiers</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Choisir un marché</h2>
+      <select id="market">
+        <option value="XAUUSD">Or — XAU/USD</option>
+        <option value="EURUSD">Forex — EUR/USD</option>
+        <option value="US30">Indice — US30</option>
+        <option value="BTCUSD">Crypto — BTC/USD</option>
+        <option value="USOIL">Pétrole</option>
+        <option value="AAPL">Action — Apple</option>
+      </select>
+      <button onclick="analyse()">Analyser le marché</button>
+    </section>
+
+    <section class="card">
+      <h2 id="marketTitle">Or — XAU/USD</h2>
+      <p class="price" id="price">Données non connectées</p>
+      <p class="muted" id="status">
+        Mode démonstration : aucun prix réel n'est encore connecté.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Analyse technique</h2>
+      <p class="muted" id="technical">
+        Sélectionne un marché pour commencer l'analyse.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Analyse fondamentale</h2>
+      <p class="muted">
+        Facteurs à surveiller :
+      </p>
+      <ul class="muted">
+        <li>Inflation et décisions des banques centrales.</li>
+        <li>Taux d'intérêt et rendements obligataires américains.</li>
+        <li>Emploi et croissance économique.</li>
+        <li>Actualités et événements géopolitiques.</li>
+      </ul>
+      <p class="muted">
+        Aucun calendrier économique en direct n'est encore connecté.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    MarketScope AI — Outil d'information, pas un conseil financier.
+  </footer>
+
+  <script>
+    const assets = {
+      XAUUSD: "Or — XAU/USD",
+      EURUSD: "Forex — EUR/USD",
+      US30: "Indice — US30",
+      BTCUSD: "Crypto — BTC/USD",
+      USOIL: "Pétrole",
+      AAPL: "Action — Apple"
+    };
+
+    function analyse() {
+      const market = document.getElementById("market").value;
+      document.getElementById("marketTitle").textContent = assets[market];
+      document.getElementById("price").textContent =
+        "Données en attente de connexion";
+      document.getElementById("status").textContent =
+        "Mode démonstration : aucun prix réel n'est affiché.";
+      document.getElementById("technical").textContent =
+        "Pour analyser " + assets[market] +
+        ", nous devrons connecter des données de marché et calculer les indicateurs techniques.";
+    }
+
+    analyse();
+  </script>
+</body>
+</html>
